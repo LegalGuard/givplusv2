@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { AlertCircle } from 'lucide-react';
+import { executeReset } from '../db/resetDatabase';
 
 const Signup: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -52,12 +53,15 @@ const Signup: React.FC = () => {
         role: 'donor' // Par défaut, l'inscription crée un compte donateur
       };
       
-      const success = await register(userData);
+      // Notre register retourne maintenant un objet avec des détails
+      const response = await register(userData);
       
-      if (success) {
+      if (response && response.success) {
+        console.log('Inscription réussie, redirection vers', from);
         navigate(from, { replace: true });
       } else {
-        setError('Erreur lors de l\'inscription. Cet email est peut-être déjà utilisé.');
+        // Afficher le message d'erreur spécifique s'il existe
+        setError(response?.message || 'Erreur lors de l\'inscription. Cet email est peut-être déjà utilisé.');
       }
     } catch (err) {
       setError('Erreur lors de l\'inscription. Veuillez réessayer.');
@@ -194,6 +198,19 @@ const Signup: React.FC = () => {
           Déjà un compte?{' '}
           <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">Se connecter</Link>
         </p>
+        <div className="mt-4 text-center">
+          <button 
+            type="button" 
+            className="text-xs text-gray-500 underline" 
+            onClick={() => {
+              if (window.confirm('Cette action va réinitialiser toutes les données locales. Continuer?')) {
+                executeReset();
+              }
+            }}
+          >
+            Problème d'inscription? Réinitialiser la base de données locale
+          </button>
+        </div>
       </div>
     </div>
   );

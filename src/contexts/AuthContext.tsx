@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/api';
+import { initDatabase } from '../db/database';
+
+// S'assurer que la base de données est initialisée
+initDatabase();
 
 // Types pour les données utilisateur et le contexte
 interface User {
@@ -14,9 +18,9 @@ interface AuthContextProps {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<any>;
   logout: () => void;
-  register: (userData: any) => Promise<boolean>;
+  register: (userData: any) => Promise<any>;
 }
 
 // Création du contexte

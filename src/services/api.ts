@@ -3,10 +3,19 @@
  * Contient les fonctions pour communiquer avec l'API backend
  */
 
-// URL de base de l'API
+// Import du service d'authentification local qui utilise Dexie
+import { localAuthService } from './localAuthService';
+import { db } from '../db/database';
+import { initDatabase } from '../db/database';
+
+// URL de base de l'API - Conservé pour la compatibilité avec le reste du code
+// Pour le développement local avec notre DB, cette URL n'est pas utilisée par les fonctions d'authentification
 const API_URL = import.meta.env?.PROD
-  ? 'https://api.givplus.org/api'
-  : 'http://localhost:5000/api';
+  ? '/.netlify/functions'
+  : '/api'; // Redirection via netlify.toml en développement aussi
+
+// Initialiser la base de données locale au chargement
+initDatabase();
 
 // Fonction helper pour gérer les erreurs de requête
 const handleError = (error: any): never => {
@@ -29,102 +38,44 @@ const getAuthHeaders = () => {
  * Services d'authentification
  */
 export const authService = {
-  // Inscription d'un nouvel utilisateur
+  // Inscription d'un nouvel utilisateur avec base de données locale
   register: async (userData: any) => {
     try {
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
-      });
-      
-      if (!response.ok) throw new Error('Erreur lors de l\'inscription');
-      
-      const data = await response.json();
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-      }
-      return data;
+      return await localAuthService.register(userData);
     } catch (error) {
       return handleError(error);
     }
   },
   
-  // Connexion utilisateur (MODE DEMO - Sans backend)
+  // Connexion utilisateur avec base de données locale
   login: async (email: string, password: string) => {
     try {
-      // En mode démo, on accepte n'importe quelle connexion
-      console.log('Connexion en mode DEMO');
-      
-      // Créer un utilisateur fictif pour la démo
-      const demoUser = {
-        id: '123456',
-        email: email,
-        firstName: 'Utilisateur',
-        lastName: 'Demo',
-        role: 'donor'
-      };
-      
-      // Simuler un token JWT
-      const demoToken = 'demo_token_' + Math.random().toString(36).substring(2);
-      
-      // Sauvegarder dans localStorage
-      localStorage.setItem('token', demoToken);
-      localStorage.setItem('user', JSON.stringify(demoUser));
-      
-      return { success: true, user: demoUser, token: demoToken };
-    } catch (error) {
-      return handleError(error);
+      return await localAuthService.login(email, password);
+    } catch (error: any) {
+      console.error('Erreur de connexion:', error);
+      throw error;
     }
   },
   
   // Déconnexion
   logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localAuthService.logout();
     window.location.href = '/';
   },
   
   // Vérifier si l'utilisateur est connecté
   isLoggedIn: () => {
-    return !!localStorage.getItem('token');
+    return localAuthService.isLoggedIn();
   },
   
   // Obtenir l'utilisateur actuellement connecté
   getCurrentUser: () => {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+    return localAuthService.getCurrentUser();
   },
   
   // Vérifier la validité du token
   verifyToken: async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) return false;
-      
-      const response = await fetch(`${API_URL}/auth/verify-token`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token })
-      });
-      
-      if (!response.ok) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        return false;
-      }
-      
-      const data = await response.json();
-      if (data.user) {
-        localStorage.setItem('user', JSON.stringify(data.user));
-      }
-      return data.success;
-    } catch (error) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      return false;
-    }
+    return await localAuthService.verifyToken();
   }
 };
 
