@@ -1,19 +1,14 @@
-import React, { useState } from 'react';
-import { Heart, Globe, Search, Menu, X } from 'lucide-react';
+import { useState } from 'react';
+import { Heart } from 'lucide-react';
+import AccessBar from './components/AccessBar';
+import Navbar from './components/Navbar';
 import './index.css';
 
 function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [language, setLanguage] = useState('fr');
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const changeLanguage = (lang: string) => {
-    setLanguage(lang);
-    setIsMenuOpen(false);
-  };
+  // Utiliser useState pour gérer la langue actuelle
+  // Note: Le setter est actuellement inutilisé car le changement de langue
+  // est maintenant géré par le composant Navbar
+  const [language] = useState('fr');
 
   // Language translations
   const translations: Record<string, Record<string, string>> = {
@@ -95,326 +90,148 @@ function App() {
 
   return (
     <div className={`min-h-screen ${language === 'he' ? 'text-right' : 'text-left'}`} dir={language === 'he' ? 'rtl' : 'ltr'}>
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <div className="flex-shrink-0">
-              <img src="/givplus-logo.png" alt="GivPlus" className="h-12" />
-            </div>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-10">
-              <a href="#" className="text-gray-800 hover:text-blue-500 transition-colors">
-                {t.home}
-              </a>
-              <a href="#" className="text-gray-800 hover:text-blue-500 transition-colors">
-                {t.campaigns}
-              </a>
-              <a href="#" className="text-gray-800 hover:text-blue-500 transition-colors">
-                {t.start}
-              </a>
-              <a href="#" className="text-gray-800 hover:text-blue-500 transition-colors">
-                {t.about}
-              </a>
-              <a href="#" className="text-gray-800 hover:text-blue-500 transition-colors">
-                {t.contact}
-              </a>
-            </nav>
-
-            {/* Language and Search */}
-            <div className="hidden md:flex items-center space-x-6">
-              <div className="relative">
-                <button className="text-gray-600 hover:text-blue-500 flex items-center focus:outline-none">
-                  <Globe className="h-5 w-5 mr-1" />
-                  <span className="uppercase">{language}</span>
-                </button>
-                <div className="absolute mt-2 w-24 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden group-hover:block">
-                  <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                    <button onClick={() => changeLanguage('fr')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
-                      Français
-                    </button>
-                    <button onClick={() => changeLanguage('en')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
-                      English
-                    </button>
-                    <button onClick={() => changeLanguage('he')} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-right">
-                      עברית
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <button className="text-gray-600 hover:text-blue-500">
-                <Search className="h-5 w-5" />
-              </button>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button
-                onClick={toggleMenu}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-500 hover:bg-gray-100 focus:outline-none"
-              >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-500 hover:bg-gray-50">
-                {t.home}
-              </a>
-              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-500 hover:bg-gray-50">
-                {t.campaigns}
-              </a>
-              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-500 hover:bg-gray-50">
-                {t.start}
-              </a>
-              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-500 hover:bg-gray-50">
-                {t.about}
-              </a>
-              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-500 hover:bg-gray-50">
-                {t.contact}
-              </a>
-            </div>
-            <div className="pt-4 pb-3 border-t border-gray-200">
-              <div className="flex items-center px-5">
-                <Globe className="h-5 w-5 text-gray-500" />
-                <div className="ml-3">
-                  <div className="text-base font-medium text-gray-800">Languages</div>
-                </div>
-              </div>
-              <div className="mt-3 px-2 space-y-1">
-                <button onClick={() => changeLanguage('fr')} className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-500 hover:bg-gray-50 w-full text-left">
-                  Français
-                </button>
-                <button onClick={() => changeLanguage('en')} className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-500 hover:bg-gray-50 w-full text-left">
-                  English
-                </button>
-                <button onClick={() => changeLanguage('he')} className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-500 hover:bg-gray-50 w-full text-right">
-                  עברית
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </header>
+      {/* Access Bar with donor and association spaces */}
+      <AccessBar language={language} />
+      {/* Navbar avec authentification */}
+      <Navbar />
 
       <main>
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-r from-purple-600 via-blue-500 to-indigo-700 py-20">
-          <div className="absolute inset-0 overflow-hidden">
-            <img
-              src="https://images.pexels.com/photos/45842/clasped-hands-comfort-hands-people-45842.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-              alt="People helping"
-              className="w-full h-full object-cover opacity-20"
-            />
-          </div>
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div className="max-w-3xl mx-auto text-center text-white">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
+        {/* Hero Section - avec style restauré selon le design original */}
+        <section className="bg-gradient-to-r from-purple-600 via-blue-500 to-indigo-700 py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto text-center">
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-6">
                 {t.heroTitle}
               </h1>
-              <p className="text-xl md:text-2xl mb-10 opacity-90">
+              <p className="text-lg text-white opacity-90 mb-10">
                 {t.heroSubtitle}
               </p>
-              <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <a href="#" className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-yellow-400 hover:bg-yellow-500 transition-colors shadow-md">
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="/zaka-donation" className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md bg-yellow-400 hover:bg-yellow-500 text-indigo-700 transition-colors shadow-md">
                   <Heart className="mr-2 h-5 w-5" />
                   {t.donate}
                 </a>
-                <a href="#" className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-transparent hover:bg-white/10 transition-colors border-white shadow-md">
+                <a href="#" className="inline-flex items-center justify-center px-8 py-3 border border-white text-base font-medium rounded-md text-white hover:bg-white/20 transition-colors">
                   {t.create}
                 </a>
               </div>
             </div>
           </div>
         </section>
-
-        {/* Featured Campaigns */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">{t.featured}</h2>
-              <div className="w-20 h-1 bg-yellow-400 mx-auto"></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Campaign 1 */}
-              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <img 
-                  src="https://images.pexels.com/photos/6646917/pexels-photo-6646917.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                  alt="Educational program" 
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-6">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-sm font-medium text-indigo-600">Éducation</span>
-                    <span className="text-xs font-medium text-gray-500">72% financé</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Séminaire Beth Rivkah 2025</h3>
-                  <p className="text-gray-600 mb-4 line-clamp-3">Soutenez l'éducation juive pour les jeunes filles en contribuant au développement des programmes pédagogiques innovants.</p>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                    <div className="bg-indigo-600 h-2.5 rounded-full" style={{ width: '72%' }}></div>
-                  </div>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-lg font-bold text-gray-900">65 320 €</span>
-                    <span className="text-sm text-gray-500">Objectif: 90 000 €</span>
-                  </div>
-                  <a href="#" className="block text-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
-                    {t.donate}
-                  </a>
-                </div>
-              </div>
-
-              {/* Campaign 2 */}
-              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <img 
-                  src="https://images.pexels.com/photos/5726837/pexels-photo-5726837.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                  alt="Cultural center" 
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-6">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-sm font-medium text-indigo-600">Culture</span>
-                    <span className="text-xs font-medium text-gray-500">35% financé</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Torah Or 2025</h3>
-                  <p className="text-gray-600 mb-4 line-clamp-3">Participez à la préservation et transmission des valeurs culturelles à travers le centre communautaire Torah Or.</p>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                    <div className="bg-indigo-600 h-2.5 rounded-full" style={{ width: '35%' }}></div>
-                  </div>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-lg font-bold text-gray-900">17 500 €</span>
-                    <span className="text-sm text-gray-500">Objectif: 50 000 €</span>
-                  </div>
-                  <a href="#" className="block text-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
-                    {t.donate}
-                  </a>
-                </div>
-              </div>
-
-              {/* Campaign 3 */}
-              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <img 
-                  src="https://images.pexels.com/photos/6647037/pexels-photo-6647037.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                  alt="Community support" 
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-6">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-sm font-medium text-indigo-600">Solidarité</span>
-                    <span className="text-xs font-medium text-gray-500">85% financé</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Beth Loubavitch 2025</h3>
-                  <p className="text-gray-600 mb-4 line-clamp-3">Aidez les familles dans le besoin en soutenant les initiatives sociales de Beth Loubavitch pour la communauté.</p>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                    <div className="bg-indigo-600 h-2.5 rounded-full" style={{ width: '85%' }}></div>
-                  </div>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-lg font-bold text-gray-900">127 500 €</span>
-                    <span className="text-sm text-gray-500">Objectif: 150 000 €</span>
-                  </div>
-                  <a href="#" className="block text-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
-                    {t.donate}
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center mt-12">
-              <a href="#" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 transition-colors border-indigo-600">
-                {t.viewAll}
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works */}
+        
+        {/* Section des campagnes - style restauré */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">{t.howItWorks}</h2>
-              <div className="w-20 h-1 bg-yellow-400 mx-auto"></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-              <div className="text-center">
-                <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-2xl font-bold text-indigo-600">1</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{t.step1}</h3>
-                <p className="text-gray-600">
-                  Parcourez les campagnes et trouvez une cause qui vous tient à cœur.
-                </p>
+            <div className="max-w-7xl mx-auto">
+              <div className="flex justify-between items-center mb-10">
+                <h2 className="text-3xl font-bold text-gray-900">{t.featured}</h2>
+                <a href="#" className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                  {t.viewAll}
+                  <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
               </div>
-              <div className="text-center">
-                <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-2xl font-bold text-indigo-600">2</span>
+
+              {/* Cartes de campagnes */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                {/* Campagne ZAKA Urgence Israël */}
+                <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 max-w-md mx-auto">
+                  <a href="/zaka-donation">
+                    <img 
+                      src="/5.jpg"
+                      alt="Urgence Israël - ZAKA" 
+                      className="w-full h-48 object-contain bg-black"
+                    />
+                  </a>
+                  <div className="p-4">
+                    <span className="inline-block bg-red-500 text-white text-xs px-2 py-1 rounded-md mb-2">
+                      URGENCE
+                    </span>
+                    <p className="text-gray-500 text-xs">Campagne en cours</p>
+                    <h3 className="text-lg font-semibold mb-1">
+                      <a href="/zaka-donation" className="text-gray-800 hover:text-blue-600">
+                        ZAKA - Urgence Israël
+                      </a>
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Équipez nos bénévoles sur le terrain et sauvez des vies en Israël
+                    </p>
+                    <a 
+                      href="/zaka-donation" 
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium inline-block w-full text-center"
+                    >
+                      Faire un don
+                    </a>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{t.step2}</h3>
-                <p className="text-gray-600">
-                  Effectuez un don sécurisé en quelques clics avec différentes options de paiement.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-2xl font-bold text-indigo-600">3</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{t.step3}</h3>
-                <p className="text-gray-600">
-                  Amplifiez l'impact en partageant la campagne avec votre réseau.
-                </p>
               </div>
             </div>
           </div>
         </section>
-
-        {/* About Section */}
-        <section className="py-16 bg-gray-50">
+        
+        {/* Comment ça marche - style restauré */}
+        <section className="bg-white py-16">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">{t.aboutTitle}</h2>
-                <div className="w-20 h-1 bg-yellow-400 mx-auto"></div>
+            <div className="max-w-7xl mx-auto">
+              <h2 className="text-3xl font-bold text-center mb-12">{t.howItWorks}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="bg-white p-8 rounded-lg shadow-md text-center">
+                  <div className="bg-indigo-100 h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-indigo-600 text-2xl font-bold">1</span>
+                  </div>
+                  <h3 className="text-xl font-semibold mb-4">{t.step1}</h3>
+                  <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+                <div className="bg-white p-8 rounded-lg shadow-md text-center">
+                  <div className="bg-indigo-100 h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-indigo-600 text-2xl font-bold">2</span>
+                  </div>
+                  <h3 className="text-xl font-semibold mb-4">{t.step2}</h3>
+                  <p className="text-gray-600">Sed do eiusmod tempor incididunt ut labore et dolore.</p>
+                </div>
+                <div className="bg-white p-8 rounded-lg shadow-md text-center">
+                  <div className="bg-indigo-100 h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-indigo-600 text-2xl font-bold">3</span>
+                  </div>
+                  <h3 className="text-xl font-semibold mb-4">{t.step3}</h3>
+                  <p className="text-gray-600">Ut enim ad minim veniam, quis nostrud exercitation.</p>
+                </div>
               </div>
-              <p className="text-lg text-gray-700 leading-relaxed mb-8">
+            </div>
+          </div>
+        </section>
+        {/* À propos - style restauré avec positionnement d'image corrigé */}
+        <section className="relative bg-gradient-to-r from-purple-600 via-blue-500 to-indigo-700 py-20">
+          {/* Image de fond avec positionnement amélioré */}
+          <div className="absolute inset-0 overflow-hidden z-0">
+            <img
+              src="https://images.pexels.com/photos/45842/clasped-hands-comfort-hands-people-45842.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+              alt="People helping"
+              className="w-full h-full object-cover object-center opacity-20"
+              style={{ position: 'absolute', top: 0, left: 0 }}
+            />
+          </div>
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div className="max-w-3xl mx-auto text-center text-white">
+              <h2 className="text-4xl font-bold mb-6">
+                {t.aboutTitle}
+              </h2>
+              <p className="text-xl mb-10 opacity-90">
                 {t.aboutText}
               </p>
-              <div className="flex flex-wrap justify-center gap-6 mt-10">
-                <div className="w-full sm:w-auto text-center">
-                  <div className="text-4xl font-bold text-indigo-600 mb-2">150+</div>
-                  <div className="text-gray-600">Campagnes actives</div>
-                </div>
-                <div className="w-full sm:w-auto text-center">
-                  <div className="text-4xl font-bold text-indigo-600 mb-2">7M€+</div>
-                  <div className="text-gray-600">Fonds collectés</div>
-                </div>
-                <div className="w-full sm:w-auto text-center">
-                  <div className="text-4xl font-bold text-indigo-600 mb-2">50 000+</div>
-                  <div className="text-gray-600">Donateurs</div>
-                </div>
+              <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
+                <a href="/zaka-donation" className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-yellow-400 hover:bg-yellow-500 transition-colors shadow-md">
+                  <Heart className="mr-2 h-5 w-5" />
+                  {t.donate}
+                </a>
               </div>
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-indigo-700 via-blue-500 to-purple-600">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto text-center text-white">
-              <h2 className="text-3xl font-bold mb-6">{t.cta}</h2>
-              <p className="text-lg mb-8 opacity-90">
-                Rejoignez des milliers de donateurs et soutenez des projets qui ont un impact réel sur la vie des communautés.
-              </p>
-              <a href="#" className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-yellow-400 hover:bg-yellow-500 transition-colors shadow-md">
-                {t.ctaButton}
-              </a>
-            </div>
-          </div>
-        </section>
+
       </main>
 
       {/* Footer */}
@@ -479,13 +296,7 @@ function App() {
             <p className="text-gray-400 text-sm">
               &copy; {new Date().getFullYear()} GivPlus. {t.copyright}.
             </p>
-            <div className="mt-4 md:mt-0">
-              <button onClick={() => changeLanguage('fr')} className={`px-2 text-sm ${language === 'fr' ? 'text-white' : 'text-gray-400 hover:text-white'} transition-colors`}>FR</button>
-              <span className="text-gray-600">|</span>
-              <button onClick={() => changeLanguage('en')} className={`px-2 text-sm ${language === 'en' ? 'text-white' : 'text-gray-400 hover:text-white'} transition-colors`}>EN</button>
-              <span className="text-gray-600">|</span>
-              <button onClick={() => changeLanguage('he')} className={`px-2 text-sm ${language === 'he' ? 'text-white' : 'text-gray-400 hover:text-white'} transition-colors`}>HE</button>
-            </div>
+            {/* Sélecteur de langue déplacé dans le Navbar */}
           </div>
         </div>
       </footer>
