@@ -1,20 +1,14 @@
-[build]
-  publish = "dist"
-  command = "npx vite build"
-  functions = "netlify/functions"
-
-[build.environment]
-  NODE_VERSION = "20"
-
-[dev]
-  functions = "netlify/functions"
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+{
+  "name": "netlify-functions",
+  "version": "1.0.0",
+  "description": "Fonctions serverless pour GivPlus v2",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "npm install faunadb@4.7.0 --no-save"
+  },
+  "dependencies": {
+    "faunadb": "^4.7.0",
+    "jsonwebtoken": "^8.5.1",
+    "stripe": "^11.18.0"
+  }
+}
